@@ -15,7 +15,7 @@ a {
   box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
   }
@@ -23,4 +23,26 @@ a {
     color: white;
     background: black;
   }
+} */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.card {
+  @apply mb-5 block rounded-md bg-white shadow-lg
+}
+
+.button {
+  @apply py-1 px-3 text-sm bg-[#6bbd99] hover:bg-[#87c9ac] text-white rounded-md transition font-semibold
+}
+
+input,
+select,
+textarea {
+  @apply rounded border p-2  outline-none ring-[#addec8]  focus:ring;
+}
+
+.dropdown-link {
+  @apply flex p-2 hover:bg-gray-200 rounded-md;
 }

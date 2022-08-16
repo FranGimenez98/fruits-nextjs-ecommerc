@@ -7,12 +7,8 @@ import db from "../utils/db";
 import { useContext } from "react";
 import { Store } from "../utils/Store";
 import Searchbar from "../components/Searchbar";
-import Paginate from "../components/Paginate";
-import { useSession } from "next-auth/react";
-import { toast } from "react-toastify";
 
 export default function ProductsScreen({ products }) {
-  const { data: session } = useSession();
   const orderValues = ["Asc", "Desc"];
 
   const [category, setCategory] = useState([]);
@@ -22,36 +18,20 @@ export default function ProductsScreen({ products }) {
   console.log(order);
   const { state, dispatch } = useContext(Store);
 
-  //paginate
-  const [currentPage, setCurrentPage] = useState(1);
-  const [productsPerPage, setProductsPerPage] = useState(12);
-
-  const indexOfLastRecipe = currentPage * productsPerPage;
-  const indexOfFirstRecipe = indexOfLastRecipe - productsPerPage;
-  const currentProducts = prods.slice(indexOfFirstRecipe, indexOfLastRecipe);
-
-  const paginate = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-
   console.log("selectedCategory", selectedCategory);
   console.log("productsd", prods);
 
   const handleAddToCart = (product) => {
-    if (!session) {
-      toast.error("Login or Register to add to cart");
-    } else {
-      const existItem = state.cart.cartItems.find(
-        (item) => item.slug === product.slug
-      );
-      const quantity = existItem ? existItem.quantity + 1 : 1;
+    const existItem = state.cart.cartItems.find(
+      (item) => item.slug === product.slug
+    );
+    const quantity = existItem ? existItem.quantity + 1 : 1;
 
-      if (product.countInStock < quantity) {
-        alert("No hay stock");
-        return;
-      }
-      dispatch({ type: "CART_ADD_ITEM", payload: { ...product, quantity } });
+    if (product.countInStock < quantity) {
+      alert("No hay stock");
+      return;
     }
+    dispatch({ type: "CART_ADD_ITEM", payload: { ...product, quantity } });
   };
 
   useEffect(() => {
@@ -65,12 +45,11 @@ export default function ProductsScreen({ products }) {
   }, [products]);
 
   const filteredProduct = (name) => {
-    const filter =
+    const productsX =
       name === ""
         ? products
         : products.filter((product) => product.category.includes(name));
-
-    setProds(filter);
+    setProds(productsX);
   };
 
   const sortProducts = (name) => {
@@ -99,7 +78,7 @@ export default function ProductsScreen({ products }) {
   };
 
   return (
-    <Layout title="Home">
+    <Layout title="Products">
       <div className="min-h-screen flex flex-col mt-[4rem] lg:mt-[4rem]">
         <h2 className="text-xl font-semibold my-2">Products</h2>
         <Searchbar products={products} />
@@ -113,7 +92,7 @@ export default function ProductsScreen({ products }) {
                 as="div"
                 value={category}
                 onChange={setSelectedCategory}
-                className="bg-[#87c9ac] relative p-2 rounded-md shadow-md min-w-[6rem]"
+                className="bg-[#87c9ac] relative p-2 rounded-md shadow-lg min-w-[6rem]"
               >
                 <Listbox.Button className="font-semibold text-white">
                   {selectedCategory?.length > 0
@@ -122,7 +101,7 @@ export default function ProductsScreen({ products }) {
                 </Listbox.Button>
                 <Listbox.Options
                   as="ul"
-                  className="bg-[#87c9ac] text-white absolute z-10 right-0 origin-top-right w-full rounded-b-md shadow-md py-1 px-2 "
+                  className="bg-[#87c9ac] text-white absolute z-10 right-0 origin-top-right w-full rounded-b-md shadow-lg py-1 px-2 "
                 >
                   <Listbox.Option
                     as="li"
@@ -149,14 +128,14 @@ export default function ProductsScreen({ products }) {
             <div>
               <Listbox
                 as="div"
-                className="bg-[#87c9ac] text-white relative p-2 rounded-md shadow-md min-w-[3rem]"
+                className="bg-[#87c9ac] text-white relative p-2 rounded-md shadow-lg min-w-[3rem]"
                 value={order}
                 onChange={setOrder}
               >
                 <Listbox.Button className="font-semibold">Sort</Listbox.Button>
                 <Listbox.Options
                   as="ul"
-                  className="bg-[#87c9ac] text-white absolute z-10 right-0 origin-top-right w-full rounded-b-md shadow-md py-1 px-2 text-start"
+                  className="bg-[#87c9ac] text-white absolute z-10 right-0 origin-top-right w-full rounded-b-md shadow-lg py-1 px-2 text-start"
                 >
                   {orderValues.map((name) => (
                     <Listbox.Option
@@ -175,7 +154,7 @@ export default function ProductsScreen({ products }) {
           </div>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {currentProducts.map((product) => (
+          {prods.map((product) => (
             <ProductCard
               product={product}
               key={product._id}
@@ -183,19 +162,12 @@ export default function ProductsScreen({ products }) {
             />
           ))}{" "}
         </div>
-        <Paginate
-          paginate={paginate}
-          productsPerPage={productsPerPage}
-          currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
-          products={products.length}
-        />
       </div>
     </Layout>
   );
 }
 
-export const getStaticProps = async () => {
+export const getServerSideProps = async () => {
   await db.connect();
   const products = await Product.find().lean();
 
