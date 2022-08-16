@@ -24,7 +24,7 @@ export default function ProductsScreen({ products }) {
 
   //paginate
   const [currentPage, setCurrentPage] = useState(1);
-  const [productsPerPage, setProductsPerPage] = useState(12);
+  const [productsPerPage] = useState(12);
 
   const indexOfLastRecipe = currentPage * productsPerPage;
   const indexOfFirstRecipe = indexOfLastRecipe - productsPerPage;

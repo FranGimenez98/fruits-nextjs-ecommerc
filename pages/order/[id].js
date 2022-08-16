@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -41,7 +40,6 @@ function reducer(state, action) {
   }
 }
 function OrderScreen() {
-  const { data: session } = useSession();
   // order/:id
 
   const { query } = useRouter();
@@ -52,10 +50,6 @@ function OrderScreen() {
       loading,
       error,
       order,
-      successPay,
-      loadingPay,
-      loadingDeliver,
-      successDeliver,
     },
     dispatch,
   ] = useReducer(reducer, {
@@ -74,7 +68,7 @@ function OrderScreen() {
       }
     };
       fetchOrder();
-  }, []);
+  }, [orderId]);
   const {
     shippingAddress,
     paymentMethod,

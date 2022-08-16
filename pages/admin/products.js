@@ -1,6 +1,5 @@
 import axios from "axios";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import Layout from "../../components/Layout";
 import React, { useEffect, useReducer } from "react";
 
@@ -26,7 +25,6 @@ function reducer(state, action) {
 }
 
 export default function AdminProductsScreen() {
-  const router = useRouter();
 
   const [
     { loading, error, products, loadingCreate, successDelete, loadingDelete },

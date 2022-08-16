@@ -1,7 +1,5 @@
 import {
   ArrowSmLeftIcon,
-  CubeIcon,
-  HeartIcon,
   ShoppingBagIcon,
   TrashIcon,
 } from "@heroicons/react/solid";
@@ -10,24 +8,8 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { useEffect } from "react";
-import { useReducer } from "react";
 import Layout from "../../components/Layout";
-import { ProductCard } from "../../components/ProductCard";
 
-function reducer(state, action) {
-  switch (action.type) {
-    case "FETCH_REQUEST":
-      return { ...state, loading: true, error: "" };
-    case "FETCH_SUCCESS":
-      return { ...state, loading: false, favs: action.payload, error: "" };
-    case "FETCH_FAIL":
-      return { ...state, loading: false, error: action.payload };
-    case "DELETE":
-      return { ...state, loading: false, favs: action.payload };
-    default:
-      state;
-  }
-}
 
 function FavoriteScreen() {
   const [favorites, setFavorites] = useState([]);
@@ -35,12 +17,6 @@ function FavoriteScreen() {
   const { query } = useRouter();
   const favsId = query.id;
   console.log(favsId);
-
-  const [{ loading, error, favs }, dispatch] = useReducer(reducer, {
-    loading: true,
-    favs: [],
-    error: "",
-  });
 
   useEffect(() => {
     const fetchFavs = async () => {

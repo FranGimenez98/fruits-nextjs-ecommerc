@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Menu } from "@headlessui/react";
 import Link from "next/link";
 import DropdownLink from "./DropdownLink";
-import { HomeIcon, ShoppingBagIcon, UserIcon } from "@heroicons/react/solid";
+import { HomeIcon, ShoppingBagIcon } from "@heroicons/react/solid";
 import Cookies from "js-cookie";
 import { Store } from "../utils/Store";
 import { signOut } from "next-auth/react";
@@ -47,20 +47,9 @@ export default function Navbar({ cartItems, session, status }) {
             <Menu as="div" className="relative inline-block">
               <Menu.Button className="text-white bg-[#6bbd99] hover:bg-[#87c9ac] font-semibold rounded-lg flex items-center justify-center py-1 px-2">
                 {session.user.name}
-                {/* <UserIcon className="h-6" /> */}
               </Menu.Button>
               <Menu.Items className="p-1 absolute right-0 min-w-[10rem] origin-top-right bg-white rounded-md shadow-lg mt-1">
-                {/* <Menu.Item>
-                  <DropdownLink
-                    className="dropdown-link gap-2 flex items-center"
-                    href={`/profile/${session.user._id}`}
-                  >
-                    {session.user.name}
-                    <div className="text-gray-400 text-sm">
-                      {session.user.name}
-                    </div>
-                  </DropdownLink>
-                </Menu.Item> */}
+                
                 <Menu.Item>
                   <DropdownLink
                     className="dropdown-link"
