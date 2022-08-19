@@ -4,6 +4,7 @@ import {
   TrashIcon,
 } from "@heroicons/react/solid";
 import axios from "axios";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -80,4 +81,4 @@ function FavoriteScreen() {
 }
 
 FavoriteScreen.auth = true;
-export default FavoriteScreen;
+export default dynamic(() => Promise.resolve(FavoriteScreen), { ssr: false });
