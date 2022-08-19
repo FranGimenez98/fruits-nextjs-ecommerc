@@ -11,7 +11,7 @@ import Layout from "../../components/Layout";
 import Favorite from "../../models/Favorite";
 import db from "../../utils/db";
 
-function FavoriteScreen({favs}) {
+function FavoriteScreen({ favs }) {
   const [favorites, setFavorites] = useState(favs);
   const { query } = useRouter();
   const favsId = query.id;
@@ -70,20 +70,20 @@ function FavoriteScreen({favs}) {
   );
 }
 
-export const getStaticProps  = async(context) => {
+export const getServerSideProps = async (context) => {
   const { params } = context;
-  const { id } = params;
-  console.log("params", id);
+  const { _id } = params;
+  console.log("params", _id);
 
   await db.connect();
-  const favs = await Favorite.find({ user: id }).populate("product");
+  const favs = await Favorite.find({ user: _id }).populate("product");
   await db.disconnect();
   return {
     props: {
-      favs: JSON.parse(JSON.stringify(favs))
-    }
-  }
-}
+      favs: JSON.parse(JSON.stringify(favs)),
+    },
+  };
+};
 
 FavoriteScreen.auth = true;
 export default FavoriteScreen;

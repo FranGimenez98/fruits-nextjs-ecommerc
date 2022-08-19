@@ -9,6 +9,8 @@ const handler = (req, res) => {
   }
 };
 
+
+
 const postFavorite = async (req, res) => {
   await db.connect();
   const { idUser, idProduct } = req.body;
