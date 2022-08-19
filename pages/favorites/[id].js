@@ -16,7 +16,6 @@ function FavoriteScreen() {
   console.log("favorites", favorites);
   const { query } = useRouter();
   const favsId = query.id;
-  console.log(favsId);
 
   useEffect(() => {
     const fetchFavs = async () => {
@@ -78,5 +77,5 @@ function FavoriteScreen() {
   );
 }
 
-FavoriteScreen.auth = true;
+
 export default FavoriteScreen;
