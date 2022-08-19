@@ -70,7 +70,7 @@ function FavoriteScreen({favs}) {
   );
 }
 
-export const getServerSideProps = async(context) => {
+export const getStaticProps  = async(context) => {
   const { params } = context;
   const { id } = params;
   console.log("params", id);
