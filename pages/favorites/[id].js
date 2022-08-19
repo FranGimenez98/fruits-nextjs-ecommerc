@@ -7,23 +7,15 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { useEffect } from "react";
 import Layout from "../../components/Layout";
+import Favorite from "../../models/Favorite";
+import db from "../../utils/db";
 
-
-function FavoriteScreen() {
-  const [favorites, setFavorites] = useState([]);
+function FavoriteScreen({favs}) {
+  const [favorites, setFavorites] = useState(favs);
   console.log("favorites", favorites);
   const { query } = useRouter();
   const favsId = query.id;
-
-  useEffect(() => {
-    const fetchFavs = async () => {
-      const { data } = await axios.get(`/api/favorite/${favsId}`);
-      setFavorites(data);
-    };
-    fetchFavs();
-  }, [favsId]);
 
   const handleDeleteFav = async (id) => {
     setFavorites(favorites.filter((fav) => fav.product._id !== id));
@@ -33,11 +25,13 @@ function FavoriteScreen() {
   return (
     <Layout title={`Favorites ${favsId}`}>
       <div className="min-h-screen m-auto flex flex-col mt-[4rem]">
-      <div>
-        <Link href="/">
-          <button ><ArrowSmLeftIcon className="h-10 w-10 text-[#6bbd99]"/></button>
-        </Link>
-      </div>
+        <div>
+          <Link href="/">
+            <button>
+              <ArrowSmLeftIcon className="h-10 w-10 text-[#6bbd99]" />
+            </button>
+          </Link>
+        </div>
         <h2 className="justify-self-start">Favorites</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {favorites.length > 0 &&
@@ -77,5 +71,19 @@ function FavoriteScreen() {
   );
 }
 
+export const getServerSideProps = async(context) => {
+  const { params } = context;
+  const { id } = params;
+  console.log("params", id);
+
+  await db.connect();
+  const favs = await Favorite.find({ user: id }).populate("product");
+  await db.disconnect();
+  return {
+    props: {
+      favs: JSON.parse(JSON.stringify(favs))
+    }
+  }
+}
 
 export default FavoriteScreen;
