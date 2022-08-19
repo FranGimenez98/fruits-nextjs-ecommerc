@@ -13,7 +13,6 @@ import db from "../../utils/db";
 
 function FavoriteScreen({favs}) {
   const [favorites, setFavorites] = useState(favs);
-  console.log("favorites", favorites);
   const { query } = useRouter();
   const favsId = query.id;
 
