@@ -85,4 +85,5 @@ export const getServerSideProps = async(context) => {
   }
 }
 
+FavoriteScreen.auth = true;
 export default FavoriteScreen;
