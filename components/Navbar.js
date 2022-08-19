@@ -53,7 +53,7 @@ export default function Navbar({ cartItems, session, status }) {
                 <Menu.Item>
                   <DropdownLink
                     className="dropdown-link"
-                    href={`/favorites/${session?.user._id}`}
+                    href={`/favorites`}
                   >
                     Favorites
                   </DropdownLink>

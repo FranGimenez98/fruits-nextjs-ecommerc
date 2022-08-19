@@ -4,26 +4,23 @@ import {
   TrashIcon,
 } from "@heroicons/react/solid";
 import axios from "axios";
+import { useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Layout from "../../components/Layout";
 
 function FavoriteScreen() {
   const [favorites, setFavorites] = useState([]);
-  console.log(favorites);
-
-  const { query } = useRouter();
-  const orderId = query.id;
+  const { data: session } = useSession();
 
   useEffect(() => {
     const fetchOrder = async () => {
-      const { data } = await axios.get(`/api/favorite/${orderId}`);
+      const { data } = await axios.get(`/api/favorite`);
       setFavorites(data);
     };
     fetchOrder();
-  }, [orderId]);
+  }, []);
 
   const handleDeleteFav = async (id) => {
     setFavorites(favorites.filter((fav) => fav.product._id !== id));
@@ -31,7 +28,7 @@ function FavoriteScreen() {
   };
 
   return (
-    <Layout title={`Favorites ${orderId}`}>
+    <Layout title={`Favorites ${session?.user.name}`}>
       <div className="min-h-screen m-auto flex flex-col mt-[4rem]">
         <div>
           <Link href="/">
