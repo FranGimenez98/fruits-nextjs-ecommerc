@@ -29,6 +29,7 @@ function reducer(state, action) {
     case 'DELIVER_FAIL':
       return { ...state, loadingDeliver: false };
     case 'DELIVER_RESET':
+    
       return {
         ...state,
         loadingDeliver: false,
@@ -64,7 +65,7 @@ function OrderScreen() {
         const { data } = await axios.get(`/api/orders/${orderId}`);
         dispatch({ type: 'FETCH_SUCCESS', payload: data });
       } catch (err) {
-        dispatch({ type: 'FETCH_FAIL', payload: err });
+        dispatch({ type: 'FETCH_FAIL', payload: 'error' });
       }
     };
       fetchOrder();
