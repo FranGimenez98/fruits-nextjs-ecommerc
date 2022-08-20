@@ -71,7 +71,7 @@ export default function FavoriteScreen({ favs }) {
   );
 }
 
-export const getServerSideProps = async (context) => {
+export const getStaticProps = async (context) => {
   const { req } = context;
   const session = await getSession({ req });
 
