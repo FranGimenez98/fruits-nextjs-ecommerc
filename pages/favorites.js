@@ -22,7 +22,7 @@ export default function FavoriteScreen({ favs }) {
   };
 
   return (
-    <Layout title={`Favorites ${session?.user.name}`}>
+    <Layout title={`Favorites ${session?.user?.name}`}>
       <div className="min-h-screen m-auto flex flex-col mt-[4rem]">
         <div>
           <Link href="/">
@@ -71,12 +71,12 @@ export default function FavoriteScreen({ favs }) {
   );
 }
 
-export const getStaticProps = async (context) => {
+export const getServerSideProps = async (context) => {
   const { req } = context;
   const session = await getSession({ req });
 
   await db.connect();
-  const favs = await Favorite.find({ user: session.user._id })
+  const favs = await Favorite.find({ user: session?.user?._id })
     .populate("product")
     .lean();
   await db.disconnect();
