@@ -5,6 +5,7 @@ import {
 } from "@heroicons/react/solid";
 import axios from "axios";
 import { useSession } from "next-auth/react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Layout from "../components/Layout";
@@ -76,5 +77,4 @@ function FavoriteScreen() {
   );
 }
 
-FavoriteScreen.auth = true;
-export default FavoriteScreen;
+export default dynamic(() => Promise.resolve(FavoriteScreen), { ssr: false });
