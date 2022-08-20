@@ -173,7 +173,7 @@ export const getServerSideProps = async () => {
 
   return {
     props: {
-      products: products.map(db.docToObject),
+      products: JSON.parse(JSON.stringify(products)),
     },
   };
 };

@@ -22,7 +22,7 @@ const getUserFavorites = async (req, res) => {
   await db.connect();
   const favorites = await Favorite.find({ user: user._id }).populate("product");
   await db.disconnect();
-  res.send(favorites);
+  res.json(favorites);
 };
 
 const postFavorite = async (req, res) => {

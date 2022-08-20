@@ -85,13 +85,14 @@ export const getServerSideProps = async (context) => {
   const session = await getSession({ req });
 
   await db.connect();
-  const favs = await Favorite.find({ user: session.user._id }).populate(
-    "product"
-  );
+  const favs = await Favorite.find({ user: session.user._id })
+    .populate("product")
+    .lean();
+  await db.disconnect();
 
   return {
     props: {
-      favs: JSON.parse(JSON.stringify(favs)),
+      favs: JSON.parse(JSON.stringify(favs))
     },
   };
 };
