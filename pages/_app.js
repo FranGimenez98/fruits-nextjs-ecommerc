@@ -1,6 +1,5 @@
 import { SessionProvider, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import Layout from "../components/Layout";
 import { usePageLoading } from "../hooks/usePageLoading";
 import "../styles/globals.css";
 import { StoreProvider } from "../utils/Store";
