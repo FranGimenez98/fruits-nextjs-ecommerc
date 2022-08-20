@@ -7,7 +7,7 @@ import axios from "axios";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import Layout from "../../components/Layout";
+import Layout from "../components/Layout";
 
 function FavoriteScreen() {
   const [favorites, setFavorites] = useState([]);
