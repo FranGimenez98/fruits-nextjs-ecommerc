@@ -6,11 +6,10 @@ import {
 import axios from "axios";
 import { useSession, getSession } from "next-auth/react";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Layout from "../components/Layout";
 import Favorite from "../models/Favorite";
 import db from "../utils/db";
-import Router from "next/router";
 
 export default function FavoriteScreen({ favs }) {
   const [favorites, setFavorites] = useState(favs);
@@ -22,31 +21,11 @@ export default function FavoriteScreen({ favs }) {
     return await axios.delete(`/api/favorite/${id}`);
   };
 
-  const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    const start = () => {
-      console.log("start");
-      setLoading(true);
-    };
-    const end = () => {
-      console.log("finished");
-      setLoading(false);
-    };
-    Router.events.on("routeChangeStart", start);
-    Router.events.on("routeChangeComplete", end);
-    Router.events.on("routeChangeError", end);
-    return () => {
-      Router.events.off("routeChangeStart", start);
-      Router.events.off("routeChangeComplete", end);
-      Router.events.off("routeChangeError", end);
-    };
-  }, []);
+  
 
   return (
     <Layout title={`Favorites ${session?.user?.name}`}>
-      {loading ? (
-        <h1>Loading</h1>
-      ) : (
+
         <div className="min-h-screen m-auto flex flex-col mt-[4rem]">
           <div>
             <Link href="/">
@@ -91,7 +70,7 @@ export default function FavoriteScreen({ favs }) {
               ))}
           </div>
         </div>
-      )}
+
     </Layout>
   );
 }
