@@ -12,19 +12,10 @@ import Favorite from "../models/Favorite";
 import db from "../utils/db";
 
 export default function FavoriteScreen({ favs }) {
-  // const [favorites, setFavorites] = useState([]);
   const [favorites, setFavorites] = useState(favs);
-  console.log(favorites);
+  
   const { data: session } = useSession();
-
-  // useEffect(() => {
-  //   const fetchOrder = async () => {
-  //     const { data } = await axios.get(`/api/favorite`);
-  //     setFavorites(data);
-  //   };
-  //   fetchOrder();
-  // }, []);
-
+  
   const handleDeleteFav = async (id) => {
     setFavorites(favorites.filter((fav) => fav.product._id !== id));
     return await axios.delete(`/api/favorite/${id}`);
@@ -92,8 +83,7 @@ export const getServerSideProps = async (context) => {
 
   return {
     props: {
-      favs: JSON.parse(JSON.stringify(favs))
+      favs: JSON.parse(JSON.stringify(favs)),
     },
   };
 };
-
