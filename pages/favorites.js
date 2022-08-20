@@ -4,23 +4,26 @@ import {
   TrashIcon,
 } from "@heroicons/react/solid";
 import axios from "axios";
-import { useSession } from "next-auth/react";
-import dynamic from "next/dynamic";
+import { useSession, getSession } from "next-auth/react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Layout from "../components/Layout";
+import Favorite from "../models/Favorite";
+import db from "../utils/db";
 
-function FavoriteScreen() {
-  const [favorites, setFavorites] = useState([]);
+function FavoriteScreen({ favs }) {
+  // const [favorites, setFavorites] = useState([]);
+  const [favorites, setFavorites] = useState(favs);
+  console.log(favorites);
   const { data: session } = useSession();
 
-  useEffect(() => {
-    const fetchOrder = async () => {
-      const { data } = await axios.get(`/api/favorite`);
-      setFavorites(data);
-    };
-    fetchOrder();
-  }, []);
+  // useEffect(() => {
+  //   const fetchOrder = async () => {
+  //     const { data } = await axios.get(`/api/favorite`);
+  //     setFavorites(data);
+  //   };
+  //   fetchOrder();
+  // }, []);
 
   const handleDeleteFav = async (id) => {
     setFavorites(favorites.filter((fav) => fav.product._id !== id));
@@ -77,4 +80,20 @@ function FavoriteScreen() {
   );
 }
 
-export default dynamic(() => Promise.resolve(FavoriteScreen), { ssr: false });
+export const getServerSideProps = async (context) => {
+  const { req } = context;
+  const session = await getSession({ req });
+
+  await db.connect();
+  const favs = await Favorite.find({ user: session.user._id }).populate(
+    "product"
+  );
+
+  return {
+    props: {
+      favs: JSON.parse(JSON.stringify(favs)),
+    },
+  };
+};
+
+export default FavoriteScreen;
