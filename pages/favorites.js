@@ -16,10 +16,10 @@ export default function FavoriteScreen({ favs }) {
   
   const { data: session } = useSession();
   
-  const handleDeleteFav = async (id) => {
-    setFavorites(favorites.filter((fav) => fav.product._id !== id));
-    return await axios.delete(`/api/favorite/${id}`);
-  };
+  // const handleDeleteFav = async (id) => {
+  //   setFavorites(favorites.filter((fav) => fav.product._id !== id));
+  //   return await axios.delete(`/api/favorite/${id}`);
+  // };
 
   return (
     <Layout title={`Favorites ${session?.user.name}`}>
@@ -38,7 +38,7 @@ export default function FavoriteScreen({ favs }) {
             favorites.map((item, index) => (
               <div className="card p-4 relative" key={index}>
                 <div
-                  onClick={() => handleDeleteFav(item.product._id)}
+                  // onClick={() => handleDeleteFav(item.product._id)}
                   className="absolute top-2 right-2 flex justify-center items-center bg-red-200 md:hover:bg-red-300 p-1 rounded-md md:cursor-pointer"
                 >
                   <TrashIcon className="h-4 text-red-500" />
