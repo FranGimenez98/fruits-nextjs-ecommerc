@@ -6,67 +6,92 @@ import {
 import axios from "axios";
 import { useSession, getSession } from "next-auth/react";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Layout from "../components/Layout";
 import Favorite from "../models/Favorite";
 import db from "../utils/db";
+import Router from "next/router";
 
 export default function FavoriteScreen({ favs }) {
   const [favorites, setFavorites] = useState(favs);
-  
+
   const { data: session } = useSession();
-  
+
   const handleDeleteFav = async (id) => {
     setFavorites(favorites.filter((fav) => fav.product._id !== id));
     return await axios.delete(`/api/favorite/${id}`);
   };
 
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    const start = () => {
+      console.log("start");
+      setLoading(true);
+    };
+    const end = () => {
+      console.log("finished");
+      setLoading(false);
+    };
+    Router.events.on("routeChangeStart", start);
+    Router.events.on("routeChangeComplete", end);
+    Router.events.on("routeChangeError", end);
+    return () => {
+      Router.events.off("routeChangeStart", start);
+      Router.events.off("routeChangeComplete", end);
+      Router.events.off("routeChangeError", end);
+    };
+  }, []);
+
   return (
     <Layout title={`Favorites ${session?.user?.name}`}>
-      <div className="min-h-screen m-auto flex flex-col mt-[4rem]">
-        <div>
-          <Link href="/">
-            <button>
-              <ArrowSmLeftIcon className="h-10 w-10 text-[#6bbd99]" />
-            </button>
-          </Link>
-        </div>
-        <h2 className="justify-self-start">Favorites</h2>
+      {loading ? (
+        <h1>Loading</h1>
+      ) : (
+        <div className="min-h-screen m-auto flex flex-col mt-[4rem]">
+          <div>
+            <Link href="/">
+              <button>
+                <ArrowSmLeftIcon className="h-10 w-10 text-[#6bbd99]" />
+              </button>
+            </Link>
+          </div>
+          <h2 className="justify-self-start">Favorites</h2>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full">
-          {favorites.length > 0 &&
-            favorites.map((item, index) => (
-              <div className="card p-4 relative" key={index}>
-                <div
-                  onClick={() => handleDeleteFav(item.product._id)}
-                  className="absolute top-2 right-2 flex justify-center items-center bg-red-200 md:hover:bg-red-300 p-1 rounded-md md:cursor-pointer"
-                >
-                  <TrashIcon className="h-4 text-red-500" />
-                </div>
-                <Link href={`product/${item.product.slug}`}>
-                  <a>
-                    <img
-                      src={item.product.image}
-                      alt={item.product.name}
-                      className="md:h-44"
-                    />
-                  </a>
-                </Link>
-                <div className="w-full flex flex-col items-center">
-                  <h2 className="font-semibold mb-1">{item.product.name}</h2>
-                  <h2 className="font-semibold text-[#e36414]">
-                    ${item.product.price}
-                  </h2>
-                  <div>
-                    <button className="button my-3 flex items-center justify-center gap-1">
-                      Add to cart <ShoppingBagIcon className="h-4" />
-                    </button>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full">
+            {favorites.length > 0 &&
+              favorites.map((item, index) => (
+                <div className="card p-4 relative" key={index}>
+                  <div
+                    onClick={() => handleDeleteFav(item.product._id)}
+                    className="absolute top-2 right-2 flex justify-center items-center bg-red-200 md:hover:bg-red-300 p-1 rounded-md md:cursor-pointer"
+                  >
+                    <TrashIcon className="h-4 text-red-500" />
+                  </div>
+                  <Link href={`product/${item.product.slug}`}>
+                    <a>
+                      <img
+                        src={item.product.image}
+                        alt={item.product.name}
+                        className="md:h-44"
+                      />
+                    </a>
+                  </Link>
+                  <div className="w-full flex flex-col items-center">
+                    <h2 className="font-semibold mb-1">{item.product.name}</h2>
+                    <h2 className="font-semibold text-[#e36414]">
+                      ${item.product.price}
+                    </h2>
+                    <div>
+                      <button className="button my-3 flex items-center justify-center gap-1">
+                        Add to cart <ShoppingBagIcon className="h-4" />
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+          </div>
         </div>
-      </div>
+      )}
     </Layout>
   );
 }
