@@ -11,7 +11,7 @@ import Layout from "../components/Layout";
 import Favorite from "../models/Favorite";
 import db from "../utils/db";
 
-function FavoriteScreen({ favs }) {
+export default function FavoriteScreen({ favs }) {
   // const [favorites, setFavorites] = useState([]);
   const [favorites, setFavorites] = useState(favs);
   console.log(favorites);
@@ -86,6 +86,7 @@ export const getServerSideProps = async (context) => {
 
   await db.connect();
   const favs = await Favorite.find({ user: session.user._id })
+    .populate("product")
     .lean();
   await db.disconnect();
 
@@ -96,4 +97,3 @@ export const getServerSideProps = async (context) => {
   };
 };
 
-export default FavoriteScreen;
