@@ -86,7 +86,6 @@ export const getServerSideProps = async (context) => {
 
   await db.connect();
   const favs = await Favorite.find({ user: session.user._id })
-    .populate("product")
     .lean();
   await db.disconnect();
 
